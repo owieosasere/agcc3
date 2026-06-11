@@ -9,9 +9,6 @@
 @layer base {
   /**
    * Tailwind CSS theme - Dwight design system
-   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
-   * A different format will require also updating the theme in tailwind.config.ts.
-   *
    * Color mapping:
    * --primary: Dwight Navy (#13234b)
    * --accent: Dwight Crimson (#cf202f)
@@ -27,22 +24,18 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 20% 15%;
 
-    /* Premium Navy: #1a3a52 - Enhanced depth */
     --primary: 215 51% 27%;
     --primary-foreground: 0 0% 100%;
 
-    /* Premium Dark Navy: #2d4a5f */
     --secondary: 215 30% 30%;
     --secondary-foreground: 0 0% 100%;
 
     --muted: 0 0% 95%;
     --muted-foreground: 0 0% 45%;
 
-    /* Premium Gold/Accent: Enriched for better visibility */
     --accent: 43 95% 48%;
     --accent-foreground: 0 0% 13%;
 
-    /* Premium Deep Gold: #b8860b */
     --accent-dark: 42 100% 37%;
 
     --destructive: 0 84.2% 60.2%;
@@ -55,19 +48,12 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 215 51% 27%;
-
     --sidebar-primary-foreground: 0 0% 100%;
-
     --sidebar-accent: 43 89% 53%;
-
     --sidebar-accent-foreground: 0 0% 13%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 43 89% 53%;
   }
 
@@ -158,7 +144,6 @@
     color: hsl(var(--primary));
   }
 
-  /* Serif accent for editorial text (Lora for Adobe Caslon substitute) */
   .serif-accent {
     font-family: Lora, Georgia, serif;
     font-style: italic;
@@ -169,10 +154,11 @@
   }
 
   a {
-    @apply text-accent transition-colors duration-300;
+    color: hsl(var(--accent));
+    transition: color 0.3s;
 
     &:hover {
-      @apply text-accent/80;
+      color: hsl(var(--accent) / 0.8);
     }
   }
 
@@ -189,15 +175,16 @@
 }
 
 @layer components {
-  /* Section styling - Premium Edition */
   .section-heading {
-    @apply text-4xl md:text-5xl lg:text-6xl font-black uppercase text-center mb-8 text-primary tracking-tight;
+    @apply text-4xl md:text-5xl lg:text-6xl font-black uppercase text-center mb-8 tracking-tight;
+    color: hsl(var(--primary));
     letter-spacing: -0.02em;
     line-height: 1.1;
   }
 
   .section-divider {
-    @apply w-2 h-20 md:h-32 bg-gradient-to-b from-accent to-accent/60 mx-auto mb-8 rounded-full;
+    @apply w-2 h-20 md:h-32 mx-auto mb-8 rounded-full;
+    background: linear-gradient(to bottom, hsl(var(--accent)), hsl(var(--accent) / 0.6));
   }
 
   .section-subheading {
@@ -206,20 +193,22 @@
     line-height: 1.6;
   }
 
-  /* Dwight-style button system - Premium Edition */
   .cta-button {
     @apply inline-flex items-center justify-center px-8 py-3.5 font-black uppercase text-xs tracking-wider transition-all duration-300 ease-out relative overflow-hidden;
     letter-spacing: 0.08em;
   }
 
-  /* Primary outlined button (navy border, fills on hover) */
   .cta-primary {
-    @apply cta-button border-2 border-primary text-primary bg-transparent;
+    @apply cta-button border-2 bg-transparent;
+    border-color: hsl(var(--primary));
+    color: hsl(var(--primary));
     position: relative;
 
     &:before {
       content: '';
-      @apply absolute inset-0 bg-primary;
+      position: absolute;
+      inset: 0;
+      background-color: hsl(var(--primary));
       transform: scaleX(0);
       transform-origin: right;
       transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -227,7 +216,8 @@
     }
 
     &:hover {
-      @apply text-white shadow-xl;
+      color: white;
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
       border-color: hsl(var(--primary));
 
       &:before {
@@ -237,14 +227,17 @@
     }
   }
 
-  /* Secondary/accent button (gold) */
   .cta-secondary {
-    @apply cta-button border-2 border-accent text-accent bg-transparent;
+    @apply cta-button border-2 bg-transparent;
+    border-color: hsl(var(--accent));
+    color: hsl(var(--accent));
     position: relative;
 
     &:before {
       content: '';
-      @apply absolute inset-0 bg-accent;
+      position: absolute;
+      inset: 0;
+      background-color: hsl(var(--accent));
       transform: scaleX(0);
       transform-origin: right;
       transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -253,7 +246,7 @@
 
     &:hover {
       color: hsl(var(--accent-foreground));
-      @apply shadow-xl;
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
       border-color: hsl(var(--accent));
 
       &:before {
@@ -263,17 +256,19 @@
     }
   }
 
-  /* Filled variant (solid background) */
   .cta-filled {
-    @apply cta-button bg-primary text-white shadow-lg;
+    @apply cta-button text-white shadow-lg;
+    background-color: hsl(var(--primary));
 
     &:hover {
-      @apply shadow-2xl transform -translate-y-1 bg-primary/95;
+      @apply shadow-2xl transform -translate-y-1;
+      background-color: hsl(var(--primary) / 0.95);
     }
   }
 
   .cta-filled-accent {
-    @apply cta-button bg-accent shadow-lg;
+    @apply cta-button shadow-lg;
+    background-color: hsl(var(--accent));
     color: hsl(var(--accent-foreground));
 
     &:hover {
@@ -282,30 +277,31 @@
     }
   }
 
-  /* Premium card with luxury styling */
   .premium-card {
-    @apply bg-white border border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-400 transform hover:-translate-y-4;
+    @apply bg-white border border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-4;
     backdrop-filter: blur(8px);
     border-top: 2px solid hsl(var(--accent));
     background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
   }
 
-  /* Panel with accent line */
   .accent-panel {
     @apply relative pl-8;
 
     &:before {
       content: '';
-      @apply absolute left-0 top-0 bottom-0 w-1 bg-accent;
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0.25rem;
+      background-color: hsl(var(--accent));
     }
   }
 
-  /* Section wrapper with proper spacing - Premium Edition */
   .section-premium {
     @apply py-28 md:py-48;
   }
 
-  /* Premium gradient feature panel - Enhanced */
   .gradient-panel-blue {
     background: linear-gradient(135deg, rgba(26, 58, 82, 0.08) 0%, rgba(212, 175, 55, 0.06) 100%);
     @apply py-24 md:py-40 relative;
@@ -317,92 +313,72 @@
     }
   }
 
-  /* Elegant divider */
   .divider-elegant {
-    @apply h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent my-12;
+    @apply h-px my-12;
+    background: linear-gradient(to right, transparent, #d1d5db, transparent);
   }
 
-  /* Section accent line (before heading) */
   .section-accent-line {
-    @apply w-1 h-16 bg-accent inline-block mr-4;
+    @apply w-1 h-16 inline-block mr-4;
+    background-color: hsl(var(--accent));
   }
 
-  /* Premium input styling */
   input, textarea {
     @apply bg-white border border-gray-300 transition-all duration-300;
 
     &:focus {
-      @apply border-accent ring-2 ring-accent/20;
+      border-color: hsl(var(--accent));
+      box-shadow: 0 0 0 2px hsl(var(--accent) / 0.2);
     }
   }
 
-  /* Icon badge styling */
   .icon-badge {
-    @apply w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center transition-all duration-300;
+    @apply w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300;
+    background-color: hsl(var(--accent) / 0.1);
 
     svg {
-      @apply text-accent;
+      color: hsl(var(--accent));
     }
   }
 
-  /* Stat number styling */
   .stat-number {
-    @apply text-5xl md:text-6xl font-black text-accent;
+    @apply text-5xl md:text-6xl font-black;
+    color: hsl(var(--accent));
   }
 
-  /* High-visibility white text on dark backgrounds */
   .white-text-on-dark {
     @apply text-white font-black;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     letter-spacing: 0.05em;
   }
 
-  /* Feature list item */
   .feature-item {
-    @apply flex items-start gap-4 p-6 rounded border border-gray-100 hover:border-accent hover:shadow-md transition-all duration-300;
+    @apply flex items-start gap-4 p-6 rounded border border-gray-100 transition-all duration-300;
+
+    &:hover {
+      border-color: hsl(var(--accent));
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    }
   }
 
-  /* Animation classes */
   @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   @keyframes slideInRight {
-    from {
-      opacity: 0;
-      transform: translateX(-30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
   }
 
   @keyframes scaleIn {
-    from {
-      opacity: 0;
-      transform: scale(0.92);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
   }
 
   @keyframes shimmer {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.8;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
   }
 
   .animate-fade-in {
@@ -421,13 +397,13 @@
     animation: shimmer 3s ease-in-out infinite;
   }
 
-  /* Smooth transitions on all interactive elements */
   a, button, input, textarea, select {
     @apply transition-all duration-300 ease-out;
   }
 
-  /* Smooth text selection */
   ::selection {
-    @apply bg-accent/20 text-primary;
+    background-color: hsl(var(--accent) / 0.2);
+    color: hsl(var(--primary));
   }
+}
 }
